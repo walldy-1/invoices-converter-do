@@ -1,6 +1,6 @@
 **/__pycache__/
 __working/
-.streamlit/
+.streamlit/secrets.toml
 db/
 .result_1.json
 .result_2.json

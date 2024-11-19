@@ -1,0 +1,6 @@
+**/__pycache__/
+__working/
+.streamlit/
+db/
+.result_1.json
+.result_2.json

@@ -65,7 +65,8 @@ def prepare_widget(
     
     # validate widget value
     if attr_type == "totals":
-        check_totals(doc_id, s_st[sn.CURR_PAGE], errors)
+        pass
+        #check_totals(doc_id, s_st[sn.CURR_PAGE], errors)
     else:
         check_form_value(attr_type, widget_key, errors)
     

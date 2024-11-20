@@ -13,7 +13,7 @@ from page.components.error.error_dialog import show_error_dialog
 from page.func.switch_page import switch_page
 from page.func.form_validator import(
     check_form_value,
-    check_totals,
+    #check_totals,#################################################################
     check_doc,
     style_invalid_values_widgets
 )
@@ -44,11 +44,11 @@ def prepare_widget(
     
     # change attr type when amount is total price from invoice,
     # for extra validation
-    if attr_name in [
-        sn.INV_TOTAL_GROSS_AMOUNT,
-        sn.INV_TOTAL_NET_AMOUNT,
-        sn.INV_TOTAL_TAX_AMOUNT]:
-        attr_type = "totals"
+    # if attr_name in [
+    #     sn.INV_TOTAL_GROSS_AMOUNT,
+    #     sn.INV_TOTAL_NET_AMOUNT,
+    #     sn.INV_TOTAL_TAX_AMOUNT]:
+    #     attr_type = "totals"#####################################################
 
     if attr_type == "other":
         max_length = 100
@@ -66,7 +66,7 @@ def prepare_widget(
     # validate widget value
     if attr_type == "totals":
         pass
-        #check_totals(doc_id, s_st[sn.CURR_PAGE], errors)
+        #check_totals(doc_id, s_st[sn.CURR_PAGE], errors)##########################
     else:
         check_form_value(attr_type, widget_key, errors)
     

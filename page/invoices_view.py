@@ -9,6 +9,7 @@ from const.session_names import SessionNames as sn
 from const.invoice import InvoiceVarNames as inm
 from const.invoice import InvoiceDateFormats
 from lib.io.file_manager import FileManager
+from lib.utils.validator import try_fix_amount
 from page.components.header.header import load_header
 from page.components.invoice.export_dialog import show_export_dialog
 from page.func.page_inputs import prepare_inputs_session_structure
@@ -19,7 +20,7 @@ from page.func.form_validator import(
     style_invalid_values_widgets,
     validate_amount,
     validate_date,
-    to_float
+    to_float,
 )
 
 
@@ -32,6 +33,11 @@ def get_db_inv_data() -> DataFrame:
 
 
 def df_selected(data_df: DataFrame, ids_df: DataFrame):
+    amount_cols = [
+        inm.INV_TOTAL_GROSS_AMOUNT,
+        inm.INV_TOTAL_NET_AMOUNT,
+        inm.INV_TOTAL_TAX_AMOUNT
+    ]
     sel_row_state = st.session_state["df_inv_view"]["selection"]["rows"]
     if len(sel_row_state) > 0:
         idx = sel_row_state[0]
@@ -42,6 +48,11 @@ def df_selected(data_df: DataFrame, ids_df: DataFrame):
         inv_data[sn.INV_DOC_IMAGE] = inv_image
         s_st[sn.EDIT_INV_ACTION] = "edit"
         s_st[sn.EXISTING_INVOICES] = [inv_data]
+
+        for key, val in inv_data.items():
+            if key in amount_cols:
+                inv_data[key] = try_fix_amount(val)
+
         switch_page("invoices_edit", with_rerun=False)
 
 
@@ -132,8 +143,15 @@ def get_data() -> Tuple[DataFrame, DataFrame]:
         inm.INV_TOTAL_NET_AMOUNT,
         inm.INV_TOTAL_TAX_AMOUNT
     ]
-    format_dict = {col: amount_format for col in amount_cols}
-    filtered_df.style.format(format_dict, thousands=" ", decimal=",")
+    # format_dict = {col: amount_format for col in amount_cols}
+    # filtered_df.style.format(format_dict, thousands=" ", decimal=",")
+
+    # amounts formatting
+    for col in amount_cols:
+        filtered_df[col] = filtered_df[col].apply(lambda x: amount_format.format(x).replace(',', ' ').replace('.', ','))
+
+    # st.write(filtered_df)
+    # st.stop()
 
     return filtered_df, hidden_df
 
